@@ -7,7 +7,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 
-spectrograms_path = "./pictures"
+spectrograms_path = "./pictures_with_shift_crop"
 spectrogram_files = [os.path.join(spectrograms_path, f) for f in os.listdir(spectrograms_path) if f.endswith('.png')]
 labels = []
 sift = cv2.SIFT_create()
