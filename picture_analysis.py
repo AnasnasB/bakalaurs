@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import os
-
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
@@ -31,7 +31,7 @@ for file in spectrogram_files:
 cv2.destroyAllWindows()
 all_descriptors = np.vstack(descriptors_list)
 
-num_clusters = 30
+num_clusters = 60
 kmeans = KMeans(n_clusters=num_clusters, random_state=42)
 kmeans.fit(all_descriptors)
 
@@ -48,7 +48,7 @@ spectrogram_features = np.array(spectrogram_features)
 labels = np.array(labels)
 
 
-X_train, X_test, y_train, y_test = train_test_split(spectrogram_features, labels, test_size=0.3, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(spectrogram_features, labels, test_size=0.3, random_state=50)
 print(y_train, y_test)
 svm = SVC(kernel='linear', C=1, random_state=42)
 svm.fit(spectrogram_features, labels)
@@ -58,3 +58,24 @@ y_pred = svm.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred, zero_division=0))
 
+
+##Drawing median##
+
+median_features = np.zeros((6, num_clusters))
+
+for person_id in range(6):
+    person_features = spectrogram_features[labels == person_id] 
+    median_features[person_id] = np.median(person_features, axis=0)
+
+plt.figure(figsize=(12, 6))
+
+for person_id in range(6):
+    plt.plot(range(num_clusters), median_features[person_id], label=f'Person {person_id}')
+
+plt.title("Median Feature Distributions for Each Person")
+plt.xlabel("Cluster ID")
+plt.ylabel("Median Value")
+plt.legend()
+plt.grid(True)
+plt.savefig(f'./final_result_graphs/median_feature_distribution_for_clusters.png')
+plt.clf()

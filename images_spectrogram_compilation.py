@@ -28,7 +28,6 @@ def find_best_x_shift(img1, img2):
     return best_shift
 
 def shift_image(img, shift_x):
-    """Сдвигает изображение img на shift_x пикселей"""
     M = np.float32([[1, 0, shift_x], [0, 1, 0]])
     shifted_img = cv2.warpAffine(img, M, (img.shape[1], img.shape[0]))
     return shifted_img
